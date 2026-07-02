@@ -18,6 +18,24 @@ resource "aws_s3_bucket" "backend_bucket" {
   }
 }
 
+# Enable versioning on the bucket
+resource "aws_s3_bucket_versioning" "versioning_example" {
+  bucket = aws_s3_bucket.backend_bucket.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+# Block public access to the bucket
+resource "aws_s3_bucket_public_access_block" "backend_bucket" {
+  bucket = aws_s3_bucket.backend_bucket.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 # Create a DynamoDB table for state locking
 resource "aws_dynamodb_table" "backend_lock_table" {
   name         = "${var.project_name}-tfstate-lock"
