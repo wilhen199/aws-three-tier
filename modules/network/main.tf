@@ -15,6 +15,7 @@ resource "aws_subnet" "subnet_public_alb" {
   count                   = 2
   vpc_id                  = aws_vpc.vpc_main.id
   cidr_block              = cidrsubnet(var.vpc_cidr, 8, count.index) # 10.0.0.0/16 -> 10.0.0.0/24 & 10.0.1.0/24 
+  availability_zone       = var.availability_zones[count.index]
   map_public_ip_on_launch = true
 
   tags = {
@@ -26,9 +27,10 @@ resource "aws_subnet" "subnet_public_alb" {
 
 # Private Subnets (EC2 Instances)
 resource "aws_subnet" "subnet_private_web" {
-  count      = 2
-  vpc_id     = aws_vpc.vpc_main.id
-  cidr_block = cidrsubnet(var.vpc_cidr, 8, count.index + 11) # 10.0.0.0/16 -> 10.0.11.0/24 & 10.0.12.0/24 
+  count             = 2
+  vpc_id            = aws_vpc.vpc_main.id
+  cidr_block        = cidrsubnet(var.vpc_cidr, 8, count.index + 11) # 10.0.0.0/16 -> 10.0.11.0/24 & 10.0.12.0/24 
+  availability_zone = var.availability_zones[count.index]
 
   tags = {
     Name        = "${var.project_name}-private-web-subnet${count.index + 11}"
@@ -40,9 +42,10 @@ resource "aws_subnet" "subnet_private_web" {
 
 # Private Subnets (RDS Database)
 resource "aws_subnet" "subnet_private_db" {
-  count      = 2
-  vpc_id     = aws_vpc.vpc_main.id
-  cidr_block = cidrsubnet(var.vpc_cidr, 8, count.index + 21) # 10.0.0.0/16 -> 10.0.21.0/24 & 10.0.22.0/24 
+  count             = 2
+  vpc_id            = aws_vpc.vpc_main.id
+  cidr_block        = cidrsubnet(var.vpc_cidr, 8, count.index + 21) # 10.0.0.0/16 -> 10.0.21.0/24 & 10.0.22.0/24 
+  availability_zone = var.availability_zones[count.index]
 
   tags = {
     Name        = "${var.project_name}-private-db-subnet-${count.index + 21}"
