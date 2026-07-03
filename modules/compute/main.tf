@@ -70,11 +70,42 @@ resource "aws_security_group" "ec2_sg" {
   }
 }
 
+# IAM Role for Session Manager
+resource "aws_iam_role" "ec2_ssm_role" {
+  name = "${var.project_name}-ec2-ssm-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action    = "sts:AssumeRole"
+      Effect    = "Allow"
+      Principal = { Service = "ec2.amazonaws.com" }
+    }]
+  })
+  tags = {
+    Project     = var.project_name
+    Environment = var.environment
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_policy" {
+  role       = aws_iam_role.ec2_ssm_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_instance_profile" "ec2_ssm_profile" {
+  name = "${var.project_name}-ec2-ssm-profile"
+  role = aws_iam_role.ec2_ssm_role.name
+}
+
 # Launch Template
 resource "aws_launch_template" "web-launch-template" {
   name_prefix   = "${var.project_name}-web-launch-template"
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = var.instance_type
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ec2_ssm_profile.name
+  }
 
   network_interfaces {
     associate_public_ip_address = true
