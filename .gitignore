@@ -6,7 +6,7 @@
 *.tfstate.*
 
 # .tfvars
-*.tfvars.*
+*.tfvars
 
 # Plan and logs
 *.tfplan*
