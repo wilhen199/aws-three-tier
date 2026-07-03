@@ -81,7 +81,7 @@ resource "aws_launch_template" "web-launch-template" {
     security_groups             = [aws_security_group.ec2_sg.id]
   }
 
-  #user_data = filebase64("${path.module}/user_data.sh")
+  user_data = filebase64("${path.module}/templates/user_data.sh")
   tags = {
     Name        = "${var.project_name}-web-launch-template"
     Project     = var.project_name
