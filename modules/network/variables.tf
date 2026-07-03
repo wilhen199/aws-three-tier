@@ -18,3 +18,8 @@ variable "vpc_cidr" {
   type        = string
   description = "VPC CIDR block"
 }
+
+variable "public_subnet_cidrs" {
+  type        = list(string)
+  description = "List of public subnet CIDR blocks"
+}
