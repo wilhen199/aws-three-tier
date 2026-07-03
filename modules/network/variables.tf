@@ -19,7 +19,17 @@ variable "vpc_cidr" {
   description = "VPC CIDR block"
 }
 
-variable "public_subnet_cidrs" {
-  type        = list(string)
-  description = "List of public subnet CIDR blocks"
-}
+##variable "public_subnet_cidrs" {
+##  type        = list(string)
+##  description = "List of public subnet CIDR blocks"
+##}
+##
+##variable "private_subnet_web_cidrs" {
+##  type        = list(string)
+##  description = "List of private subnet CIDR blocks"
+##}
+##
+##variable "private_subnet_db_cidrs" {
+##  type        = list(string)
+##  description = "List of private subnet CIDR blocks for database"
+##}
