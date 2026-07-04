@@ -23,3 +23,13 @@ variable "availability_zones" {
   type        = list(string)
   description = "List of availability zones"
 }
+
+variable "db_name" {
+  type        = string
+  description = "Database name"
+}
+
+variable "db_username" {
+  type        = string
+  description = "Database username"
+}

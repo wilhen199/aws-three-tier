@@ -108,7 +108,7 @@ resource "aws_launch_template" "web-launch-template" {
   }
 
   network_interfaces {
-    associate_public_ip_address = true
+    associate_public_ip_address = false
     security_groups             = [aws_security_group.ec2_sg.id]
   }
 
@@ -200,7 +200,7 @@ resource "aws_autoscaling_policy" "cpu-web-asg-scale" {
   policy_type               = "TargetTrackingScaling"
   estimated_instance_warmup = 60
   target_tracking_configuration {
-    target_value = 20
+    target_value = 70
     predefined_metric_specification {
       predefined_metric_type = "ASGAverageCPUUtilization"
     }

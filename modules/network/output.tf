@@ -15,5 +15,5 @@ output "private_subnets_web" {
 
 output "private_subnets_db" {
   value       = aws_subnet.subnet_private_db[*].id
-  description = "The IDs of the private subnets web"
+  description = "The IDs of the private subnets db"
 }

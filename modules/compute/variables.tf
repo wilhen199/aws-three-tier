@@ -8,12 +8,6 @@ variable "project_name" {
   description = "Project Name"
 }
 
-variable "aws_region" {
-  type        = string
-  description = "AWS Region"
-  default     = "us-east-1"
-}
-
 variable "vpc_id" {
   type        = string
   description = "VPC ID"
