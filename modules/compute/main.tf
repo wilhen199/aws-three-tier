@@ -195,11 +195,12 @@ resource "aws_autoscaling_group" "web-asg" {
 
 # Auto Scaling Group Policy
 resource "aws_autoscaling_policy" "cpu-web-asg-scale" {
-  name                   = "${var.project_name}-cpu-web-asg-scale"
-  autoscaling_group_name = aws_autoscaling_group.web-asg.name
-  policy_type            = "TargetTrackingScaling"
+  name                      = "${var.project_name}-cpu-web-asg-scale"
+  autoscaling_group_name    = aws_autoscaling_group.web-asg.name
+  policy_type               = "TargetTrackingScaling"
+  estimated_instance_warmup = 60
   target_tracking_configuration {
-    target_value = 60
+    target_value = 20
     predefined_metric_specification {
       predefined_metric_type = "ASGAverageCPUUtilization"
     }
