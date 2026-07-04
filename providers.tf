@@ -7,7 +7,7 @@ terraform {
   }
   # Backend configuration for Terraform state
   backend "s3" {
-    bucket       = "aws-3-tier-tfstate-7d8387a1"
+    bucket       = "aws-3-tier-tfstate-91625e7f"
     key          = "terraform.tfstate"
     region       = "us-east-1"
     encrypt      = true
