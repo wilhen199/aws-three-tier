@@ -12,21 +12,31 @@ if [ -z "$BUCKET_NAME" ] || [ "$BUCKET_NAME" == "None" ]; then
 fi
 echo "    Bucket found: $BUCKET_NAME"
 
-echo -e "\n[1/3] Deleting bucket versioning: $BUCKET_NAME"
+echo -e "\n[1/4] Deleting bucket versioning: $BUCKET_NAME"
 VERSIONS=$(aws s3api list-object-versions --bucket $BUCKET_NAME \
   --query 'Versions[].{Key:Key,VersionId:VersionId}' --output json)
 if [ "$VERSIONS" != "[]" ] && [ "$VERSIONS" != "null" ]; then
   aws s3api delete-objects --bucket $BUCKET_NAME --delete "{\"Objects\":$VERSIONS}"
 fi
 
-echo -e "\n[2/3] Deleting delete markers"
+echo -e "\n[2/4] Deleting delete markers"
 MARKERS=$(aws s3api list-object-versions --bucket $BUCKET_NAME \
   --query 'DeleteMarkers[].{Key:Key,VersionId:VersionId}' --output json)
 if [ "$MARKERS" != "[]" ] && [ "$MARKERS" != "null" ]; then
   aws s3api delete-objects --bucket $BUCKET_NAME --delete "{\"Objects\":$MARKERS}"
 fi
 
-echo -e "\n[3/3] Deleting bucket"
+echo -e "\n[3/4] Deleting bucket"
 aws s3 rb s3://$BUCKET_NAME
+
+DYNAMO_TABLE="$PROJECT_NAME-tfstate-lock"
+
+echo -e "\n[4/4] Deleting DynamoDB table: $DYNAMO_TABLE"
+if aws dynamodb describe-table --table-name $DYNAMO_TABLE &>/dev/null; then
+  aws dynamodb delete-table --table-name $DYNAMO_TABLE
+  echo "    Table $DYNAMO_TABLE deleted"
+else
+  echo "    Table not found, skipping"
+fi
 
 echo -e "\nBucket $BUCKET_NAME deleted successfully"

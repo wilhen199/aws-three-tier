@@ -10,21 +10,32 @@ if (-not $BucketName -or $BucketName -eq "None") {
 }
 Write-Host "    Bucket found: $BucketName" -ForegroundColor Green
 
-Write-Host "`n[1/3] Deleting bucket versioning: $BucketName" -ForegroundColor Cyan
+Write-Host "`n[1/4] Deleting bucket versioning: $BucketName" -ForegroundColor Cyan
 $versions = aws s3api list-object-versions --bucket $BucketName `
   --query 'Versions[].{Key:Key,VersionId:VersionId}' --output json
 if ($versions -ne '[]' -and $versions -ne 'null') {
   aws s3api delete-objects --bucket $BucketName --delete "{`"Objects`":$versions}"
 }
 
-Write-Host "`n[2/3] Deleting delete markers" -ForegroundColor Cyan
+Write-Host "`n[2/4] Deleting delete markers" -ForegroundColor Cyan
 $markers = aws s3api list-object-versions --bucket $BucketName `
   --query 'DeleteMarkers[].{Key:Key,VersionId:VersionId}' --output json
 if ($markers -ne '[]' -and $markers -ne 'null') {
   aws s3api delete-objects --bucket $BucketName --delete "{`"Objects`":$markers}"
 }
 
-Write-Host "`n[3/3] Deleting bucket" -ForegroundColor Cyan
+Write-Host "`n[3/4] Deleting bucket" -ForegroundColor Cyan
 aws s3 rb s3://$BucketName 
+
+$DYNAMO_TABLE = "$PROJECT_NAME-tfstate-lock"
+
+Write-Host "`n[4/4] Deleting DynamoDB table: $DYNAMO_TABLE" -ForegroundColor Cyan
+$tableExists = aws dynamodb describe-table --table-name $DYNAMO_TABLE 2>$null
+if ($tableExists) {
+  aws dynamodb delete-table --table-name $DYNAMO_TABLE
+  Write-Host "    Table $DYNAMO_TABLE deleted" -ForegroundColor Green
+} else {
+  Write-Host "    Table not found, skipping" -ForegroundColor Yellow
+}
 
 Write-Host "`nBucket $BucketName deleted successfully" -ForegroundColor Green
