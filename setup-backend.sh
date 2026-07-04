@@ -21,8 +21,8 @@ if ! aws dynamodb describe-table --table-name $DYNAMO_TABLE --region $REGION &>/
     --region $REGION
 fi
 
-echo -e "\n[3/4] Updating providers.tf with new bucket"
-sed -i "s/bucket\s*=\s*\"[^\"]*\"/bucket       = \"$BUCKET_NAME\"/" providers.tf
+echo -e "\n[3/4] Actualizando providers.tf con el nuevo bucket"
+sed -i "s|\(\s*bucket\s*=\s*\)\".*\"|\1\"$BUCKET_NAME\"|" providers.tf
 echo "    bucket = $BUCKET_NAME"
 
 echo -e "\n[4/4] Initializing Terraform"

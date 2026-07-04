@@ -22,10 +22,8 @@ if (-not $tableExists) {
     --region $REGION
 }
 
-Write-Host "`n[3/4] Updating providers.tf with new bucket" -ForegroundColor Cyan
-$providers = Get-Content "providers.tf" -Raw
-$providers = $providers -replace 'b[ucket\s*=\s*"^"]*"', "bucket       = `"$BUCKET_NAME`""
-Set-Content "providers.tf" $providers
+Write-Host "`n[3/4] Actualizando providers.tf con el nuevo bucket" -ForegroundColor Cyan
+(Get-Content "providers.tf") | ForEach-Object { $_ -replace '(\s*bucket\s*=\s*)".*"', "`$1`"$BUCKET_NAME`"" } | Set-Content "providers.tf"
 Write-Host "    bucket = $BUCKET_NAME"
 
 Write-Host "`n[4/4] Initializing Terraform" -ForegroundColor Cyan
