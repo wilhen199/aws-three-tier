@@ -55,7 +55,7 @@ variable "db_engine_version" {
 variable "allocated_storage" {
   type        = number
   description = "Allocated storage in GB"
-  default     = "20"
+  default     = 20
 }
 
 variable "private_subnets_db" {
