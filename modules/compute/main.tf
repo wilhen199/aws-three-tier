@@ -128,7 +128,7 @@ resource "aws_lb" "web-lb" {
   security_groups    = [aws_security_group.web-sg.id]
   subnets            = var.public_subnets
 
-  enable_deletion_protection = false
+  enable_deletion_protection = var.environment == "prod" ? true : false # If environment is prod, enable protection delete
 
   tags = {
     Name        = "${var.project_name}-web-lb"
