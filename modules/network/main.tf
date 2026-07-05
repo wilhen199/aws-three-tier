@@ -19,7 +19,7 @@ resource "aws_subnet" "subnet_public_alb" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name        = "${var.project_name}-public-alb-subnet${count.index + 1}"
+    Name        = "${var.project_name}-public-alb-subnet-${count.index + 1}"
     Project     = var.project_name
     Environment = var.environment
   }
@@ -134,4 +134,20 @@ resource "aws_route_table_association" "private_web_subnet_association" {
   count          = 2
   subnet_id      = aws_subnet.subnet_private_web[count.index].id
   route_table_id = aws_route_table.rtb_private_web.id
+}
+
+resource "aws_route_table" "rtb_private_db" {
+  vpc_id = aws_vpc.vpc_main.id
+
+  tags = {
+    Name        = "${var.project_name}-private-db-route-table"
+    Project     = var.project_name
+    Environment = var.environment
+  }
+}
+
+resource "aws_route_table_association" "private_db_subnet_association" {
+  count          = 2
+  subnet_id      = aws_subnet.subnet_private_db[count.index].id
+  route_table_id = aws_route_table.rtb_private_db.id
 }
