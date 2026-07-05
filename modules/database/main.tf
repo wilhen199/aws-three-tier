@@ -32,8 +32,9 @@ resource "aws_security_group" "db_sg" {
 
 # Random for DB password
 resource "random_password" "db_password" {
-  length  = 8
-  special = false
+  length           = 16
+  special          = false
+  override_special = "!#$%&*-=+?"
 }
 
 # Secret Manager to RDS
