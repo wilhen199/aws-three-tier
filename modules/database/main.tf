@@ -33,7 +33,7 @@ resource "aws_security_group" "db_sg" {
 # Random for DB password
 resource "random_password" "db_password" {
   length           = 16
-  special          = false
+  special          = true
   override_special = "!#$%&*-=+?"
 }
 
